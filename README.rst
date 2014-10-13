@@ -7,21 +7,7 @@ It will also verify that the POST request originated from github.com.
 Gettings started
 ----------------
 
-Edit ``repos.json`` to configure repositories, each repository must be registered under the form ``GITHUB_USER/REPOSITORY_NAME``.
-
-.. code-block:: json
-
-    {
-        "razius/puppet": {
-            "path": "/home/puppet",
-            "action": [["git", "pull", "origin", "master"], ],
-        },
-        "d3non/somerandomexample/branch:live": {
-	    "path": "/home/exampleapp",
-	    "action": [["git", "pull", "origin", "live"],
-		["echo", "execute", "some", "commands", "..."] ]
-	}
-    }
+This no longer reads a json file like upstream, you'll need to modify index.py to get this to work in your environment.
 
 Install dependencies.
 
