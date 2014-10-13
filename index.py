@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 import io
 import os
-import re
 import sys
 import json
-import subprocess
 import requests
 import ipaddress
 from flask import Flask, request, abort
+try:
+    from git_wrapper import *
+except:
+    print "Please verify that"
+    print "/var/www/vhosts/door43.org/tools/general_tools exists."
+    sys.exit(1)
 
 app = Flask(__name__)
+pagesdir = '/var/www/vhosts/door43.org/httpdocs/data/gitrepo/pages'
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -18,7 +23,7 @@ def index():
     hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
 
     if request.method == 'GET':
-        return ' Nothing to see here, move along ...'
+        return ''
 
     elif request.method == 'POST':
         # Check if the POST request if from github.com
@@ -32,31 +37,19 @@ def index():
         if request.headers.get('X-GitHub-Event') == "ping":
             return json.dumps({'msg': 'Hi!'})
         if request.headers.get('X-GitHub-Event') != "push":
-	    return json.dumps({'msg': "wrong event type"})
-
-        repos = json.loads(io.open('repos.json', 'r').read())
+            return json.dumps({'msg': "wrong event type"})
 
         payload = json.loads(request.data)
-        repo_meta = {
-	    'name': payload['repository']['name'],
-	    'owner': payload['repository']['owner']['name'],
-	    }
-	match = re.match(r"refs/heads/(?P<branch>.*)", payload['ref'])
-	if match:
-	    repo_meta['branch'] = match.groupdict()['branch']
-	    repo = repos.get('{owner}/{name}/branch:{branch}'.format(**repo_meta), None)
-        else:
-	    repo = repos.get('{owner}/{name}'.format(**repo_meta), None)
-        print repo
-        if repo and repo.get('path', None):
-	    if repo.get('action', None):
-	        for action in repo['action']:
-		    subprocess.Popen(action,
-                             cwd=repo['path'])
-	    else:
-		subprocess.Popen(["git", "pull", "origin", "master"],
-                             cwd=repo['path'])
+        repo_name = payload['repository']['full_name']
+        if not repo_name.startswith('Door43/d43-'):
+            abort(403)
+
+        lang = repo_name.split('/')[1].replace('d43-', '')
+        local_path = os.path.join(pagesdir, lang)
+        gitPull(localpath)
+
         return 'OK'
+
 
 if __name__ == "__main__":
     try:
@@ -65,6 +58,6 @@ if __name__ == "__main__":
         port_number = 80
     is_dev = os.environ.get('ENV', None) == 'dev'
     if os.environ.get('USE_PROXYFIX', None) == 'true':
-	from werkzeug.contrib.fixers import ProxyFix
-	app.wsgi_app = ProxyFix(app.wsgi_app)
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
     app.run(host='0.0.0.0', port=port_number, debug=is_dev)
