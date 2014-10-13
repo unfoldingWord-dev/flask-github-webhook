@@ -6,6 +6,7 @@ import json
 import requests
 import ipaddress
 from flask import Flask, request, abort
+sys.path.append('/var/www/vhosts/door43.org/tools/general_tools')
 try:
     from git_wrapper import *
 except:
@@ -46,7 +47,7 @@ def index():
 
         lang = repo_name.split('/')[1].replace('d43-', '')
         local_path = os.path.join(pagesdir, lang)
-        gitPull(localpath)
+        gitPull(local_path)
 
         return 'OK'
 
