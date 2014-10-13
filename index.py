@@ -24,7 +24,7 @@ def index():
     hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
 
     if request.method == 'GET':
-        return ''
+        return 'OK'
 
     elif request.method == 'POST':
         # Check if the POST request if from github.com
