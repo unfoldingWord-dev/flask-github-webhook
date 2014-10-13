@@ -47,6 +47,7 @@ def index():
 	    repo = repos.get('{owner}/{name}/branch:{branch}'.format(**repo_meta), None)
         else:
 	    repo = repos.get('{owner}/{name}'.format(**repo_meta), None)
+        print repo
         if repo and repo.get('path', None):
 	    if repo.get('action', None):
 	        for action in repo['action']:
