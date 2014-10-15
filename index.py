@@ -16,12 +16,15 @@ except:
 
 app = Flask(__name__)
 pagesdir = '/var/www/vhosts/door43.org/httpdocs/data/gitrepo/pages'
+# Store the IP address blocks that github uses for hook requests.
+try:
+    hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
+except KeyError:
+    hook_blocks = [ u'192.30.252.0/22' ]
 
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    # Store the IP address blocks that github uses for hook requests.
-    hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
 
     if request.method == 'GET':
         return 'OK'
