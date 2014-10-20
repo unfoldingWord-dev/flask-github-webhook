@@ -16,7 +16,7 @@ except:
 
 app = Flask(__name__)
 pagesdir = '/var/www/vhosts/door43.org/httpdocs/data/gitrepo/pages'
-reposfile = /var/www/vhosts/webhook/repos.json
+reposfile = '/var/www/vhosts/webhook/repos.json'
 # Store the IP address blocks that github uses for hook requests.
 try:
     hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
