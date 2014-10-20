@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import io
+
 import os
 import sys
 import json
@@ -16,13 +16,18 @@ except:
 
 app = Flask(__name__)
 pagesdir = '/var/www/vhosts/door43.org/httpdocs/data/gitrepo/pages'
+reposfile = /var/www/vhosts/webhook/repos.json
 # Store the IP address blocks that github uses for hook requests.
 try:
     hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
 except KeyError:
     hook_blocks = [ u'192.30.252.0/22' ]
-repos = { 'Door43/tools': '/var/www/vhosts/door43.org/tools',
-        }
+
+
+if os.path.exists(reposfile):
+    repos = json.loads(open(reposfile, 'r').read())
+else:
+    repos = {}
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -53,7 +58,10 @@ def index():
         elif repo_name in repos:
             local_path = repos[repo_name]
         else:
-            abort(403)
+            abort(404)
+
+        if not os.path.exists(local_path):
+            abort(404)
 
         gitPull(local_path)
 
