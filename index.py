@@ -21,6 +21,8 @@ try:
     hook_blocks = requests.get('https://api.github.com/meta').json()['hooks']
 except KeyError:
     hook_blocks = [ u'192.30.252.0/22' ]
+repos = { 'Door43/tools': '/var/www/vhosts/door43.org/tools',
+        }
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -45,11 +47,14 @@ def index():
 
         payload = json.loads(request.data)
         repo_name = payload['repository']['full_name']
-        if not repo_name.startswith('Door43/d43-'):
+        if repo_name.startswith('Door43/d43-'):
+            lang = repo_name.split('/')[1].replace('d43-', '')
+            local_path = os.path.join(pagesdir, lang)
+        elif repo_name in repos:
+            local_path = repos[repo_name]
+        else:
             abort(403)
 
-        lang = repo_name.split('/')[1].replace('d43-', '')
-        local_path = os.path.join(pagesdir, lang)
         gitPull(local_path)
 
         return 'OK'
