@@ -61,7 +61,9 @@ def index():
             abort(404)
 
         if not os.path.exists(local_path):
-            abort(404)
+            os.makedirs(local_path, 0755)
+            gitClone(local_path, 'git@github.com:{0}.git'.format(repo_name))
+            return 'Cloned repo'
 
         gitPull(local_path)
 
