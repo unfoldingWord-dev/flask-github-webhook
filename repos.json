@@ -1,0 +1,4 @@
+{
+    "unfoldingWord-dev/tools": "/var/www/vhosts/door43.org/tools",
+    "unfoldingWord-dev/nagios_plugins": "/usr/local/nagios/libexec/nrpe_local"
+}

@@ -1,13 +1,11 @@
 Flask webhook for Github
 ########################
-A very simple github post-receive web hook handler that executes per default a pull uppon receiving. The executed action is configurable per repository.
+A very simple github post-receive web hook handler that executes per default a pull ppon receiving. The executed action is configurable per repository.
 
 It will also verify that the POST request originated from github.com.
 
 Gettings started
 ----------------
-
-This no longer reads a json file like upstream, you'll need to modify index.py to get this to work in your environment.
 
 Install dependencies.
 
