@@ -1,4 +1,7 @@
 {
     "unfoldingWord-dev/tools": "/var/www/vhosts/door43.org/tools",
-    "unfoldingWord-dev/nagios_plugins": "/usr/local/nagios/libexec/nrpe_local"
+    "unfoldingWord-dev/nagios_plugins": "/usr/local/nagios/libexec/nrpe_local",
+    "unfoldingWord-dev/USFM-Tools": "/var/www/vhosts/door43.org/USFM-Tools",
+    "Door43/udb-en": "/var/www/vhosts/door43.org/udb-en",
+    "Door43/ulb-en": "/var/www/vhosts/door43.org/ulb-en"
 }
